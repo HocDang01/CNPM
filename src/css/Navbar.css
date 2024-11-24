@@ -1,0 +1,71 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #fff;
+  }
+  
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+  }
+  
+  .navbar-logo-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #0066ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .navbar-logo-text {
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .navbar-notification {
+    margin-right: 20px;
+    position: relative;
+    color: #333;
+  }
+  
+  .navbar-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+  }
+  
+  .navbar-user {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-user-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+  }
+  
+  .navbar-user-name {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .navbar-user-balance {
+    font-size: 12px;
+    color: #666;
+  }
+  
