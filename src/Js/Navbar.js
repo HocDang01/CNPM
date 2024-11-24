@@ -1,13 +1,13 @@
 import React from "react";
 import { FaUserCircle, FaBell } from "react-icons/fa";
 import '../css/Navbar.css'
+import menu from '../images/menu.jpg'
 
 const Navbar = () => {
     return (
       <div className="navbar">
         <div className="navbar-logo">
-          <div className="navbar-logo-circle">BK</div>
-          <span className="navbar-logo-text">TRICH</span>
+          <img className="navbar-logo-circle" src={menu}>BK</img>
         </div>
         <div className="navbar-notification">
           <FaBell size={24} />
