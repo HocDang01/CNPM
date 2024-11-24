@@ -1,11 +1,12 @@
 import React from "react";
 import "../css/Sidebar.css";
+import hcmut from '../images/HCMUT_official_logo.png'
 
 const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-logo">
-        <div className="sidebar-logo-circle">BK</div>
+        <img className="sidebar-logo-circle" src={hcmut}></img>
       </div>
       <nav className="sidebar-menu">
         <a href="#" className="sidebar-item">Trang chủ</a>

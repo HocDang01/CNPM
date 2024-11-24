@@ -7,7 +7,7 @@ const Navbar = () => {
     return (
       <div className="navbar">
         <div className="navbar-logo">
-          <img className="navbar-logo-circle" src={menu}>BK</img>
+          <img className="navbar-logo-circle" src={menu}></img>
         </div>
         <div className="navbar-notification">
           <FaBell size={24} />
