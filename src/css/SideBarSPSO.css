@@ -26,6 +26,8 @@
   .sidebar-menu {
     display: flex;
     flex-direction: column;
+    gap: 15px;
+    padding: 0 20px;
   }
   
   .sidebar-item {
