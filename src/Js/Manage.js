@@ -2,6 +2,7 @@ import React from "react";
 import "../css/Manage.css";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import SideBarSPSO from "./SideBarSPSO";
 
 const Manage = () => {
   return (
