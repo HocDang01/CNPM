@@ -18,18 +18,88 @@
     align-items: center;
   }
   
-  .add-account-btn {
-    padding: 10px 20px;
-    background-color: blue;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .add-account-btn:hover {
-    background-color: darkblue;
-  }
+  /* Nút Thêm tài khoản */
+.add-account-btn {
+  padding: 12px 25px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-account-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05); /* Làm nổi bật nút khi hover */
+}
+
+
+/* Nút Thay đổi */
+.edit-btn {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* Nút Xóa */
+.delete-btn {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+/* Nút trong Modal (Hủy và Lưu) */
+.modal-actions button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.modal-actions button:first-child {
+  background-color: #f44336;
+  color: white;
+}
+
+.modal-actions button:last-child {
+  background-color: #4caf50;
+  color: white;
+}
+
+.modal-actions button:first-child:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
+}
+
+.modal-actions button:last-child:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
+}
+
   
   .filter-container {
     display: flex;

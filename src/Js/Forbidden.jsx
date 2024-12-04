@@ -6,7 +6,7 @@ const Forbidden = () => {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
-    navigate('/');  // Quay lại trang chủ
+    navigate(-1);  // Quay lại trang chủ
   };
 
   return (
@@ -14,7 +14,7 @@ const Forbidden = () => {
       <div className="forbidden-content">
         <h1>403 - Bạn không có quyền truy cập</h1>
         <p>Xin lỗi, bạn không có quyền truy cập vào trang này.</p>
-        <button className="go-home-btn" onClick={handleGoHome}>Quay lại trang chủ</button>
+        <button className="go-home-btn" onClick={handleGoHome}>Quay về</button>
       </div>
     </div>
   );

@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/ListPrinter.css"; // File CSS cho trang này
 
 const ListPrinter = () => {
-  const [printers, setPrinters] = useState([
-    { id: "PR-001", remainingPages: 100, status: "Enabled" },
-    { id: "PR-002", remainingPages: 50, status: "Disabled" },
-    { id: "PR-003", remainingPages: 200, status: "Enabled" },
-  ]);
+  const [printers, setPrinters] = useState([]);
   const [showAddPrinterModal, setShowAddPrinterModal] = useState(false);
   const [newPrinter, setNewPrinter] = useState({
     id: "",
@@ -18,52 +14,101 @@ const ListPrinter = () => {
   const [filterId, setFilterId] = useState("");
   const [filterPages, setFilterPages] = useState("");
 
-  const handleEnableDisable = (id) => {
-    setPrinters(printers.map((printer) => {
-      if (printer.id === id) {
-        const newStatus = printer.status === "Enabled" ? "Disabled" : "Enabled";
-        return { ...printer, status: newStatus };
+  // Fetch data from API
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const userRole = localStorage.getItem("role");
+
+    const fetchPrinters = async () => {
+      try {
+        const response = await fetch("/spso/printer/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // Phải bao gồm từ khóa "Bearer"
+            role: userRole, 
+          },
+        });
+        if (response.status === 401) {
+          console.log("User token từ URL:", token);
+          throw new Error("Token không hợp lệ hoặc hết hạn.");
+        }
+        if (!response.ok) {
+          throw new Error("Lỗi kết nối với API.");
+        }
+        const data = await response.json();
+        setPrinters(data); // Update the state with the fetched data
+      } catch (error) {
+        console.error("Error fetching printer data:", error);
       }
-      return printer;
-    }));
-    setSuccessMessage("Cập nhật trạng thái thành công.");
-    setTimeout(() => setSuccessMessage(""), 3000); // Ẩn thông báo sau 3 giây
+    };
+
+    fetchPrinters();
+  }, []); // Empty array means this effect runs only once, when the component mounts
+
+  const handleEnableDisable = async (id, currentStatus) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const userRole = localStorage.getItem("role");
+      // Fetch data to toggle the printer status
+      const response = await fetch(`/spso/printer/${id}`, {
+        method: "PATCH", // PATCH because we are updating the printer status
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Phải bao gồm từ khóa "Bearer"
+          role: userRole, 
+        },
+        body: JSON.stringify({
+          status: currentStatus === "Enabled" ? "Disabled" : "Enabled", // Toggle the status
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Lỗi khi cập nhật trạng thái máy in.");
+      }
+
+      // Update status locally after successful API request
+      setPrinters(printers.map((printer) => {
+        if (printer._id === id) {
+          return { ...printer, status: currentStatus === "Enabled" ? "Disabled" : "Enabled" };
+        }
+        return printer;
+      }));
+
+      setSuccessMessage("Cập nhật trạng thái thành công.");
+      setTimeout(() => setSuccessMessage(""), 3000); // Ẩn thông báo sau 3 giây
+    } catch (error) {
+      setErrorMessage("Có lỗi xảy ra khi thay đổi trạng thái máy in.");
+      console.error(error);
+    }
   };
 
   const handleAddPrinter = () => {
-    // Kiểm tra xem máy in đã tồn tại chưa
     const exists = printers.some((printer) => printer.id === newPrinter.id);
     if (exists) {
       setErrorMessage("ID máy in đã tồn tại.");
       return;
     }
 
-    // Thêm máy in mới vào danh sách
     setPrinters([...printers, newPrinter]);
     setSuccessMessage("Thêm máy in thành công.");
     setTimeout(() => setSuccessMessage(""), 3000); // Ẩn thông báo sau 3 giây
 
-    // Đóng modal
     setShowAddPrinterModal(false);
     setNewPrinter({ id: "", remainingPages: 0, status: "Enabled" });
     setErrorMessage("");
   };
 
-  const handleFilterChange = () => {
-    // Logic để lọc dữ liệu theo ID và số tờ còn lại
-  };
-
   const filteredPrinters = printers.filter((printer) => {
-    const filterById = filterId ? printer.id.includes(filterId) : true;
+    const filterById = filterId ? printer.name.includes(filterId) : true;
     const filterByPages =
       filterPages === "0-50"
-        ? printer.remainingPages <= 50
+        ? printer.paper_count <= 50
         : filterPages === "50-100"
-        ? printer.remainingPages > 50 && printer.remainingPages <= 100
+        ? printer.paper_count > 50 && printer.paper_count <= 100
         : filterPages === "100-200"
-        ? printer.remainingPages > 100 && printer.remainingPages <= 200
+        ? printer.paper_count > 100 && printer.paper_count <= 200
         : filterPages === "200+"
-        ? printer.remainingPages > 200
+        ? printer.paper_count > 200
         : true;
 
     return filterById && filterByPages;
@@ -72,17 +117,14 @@ const ListPrinter = () => {
   return (
     <div className="list-printer">
       <div className="list-printer-header">
-        {/* Nút Add Printer */}
         <button className="add-printer-btn" onClick={() => setShowAddPrinterModal(true)}>
           Thêm máy in
         </button>
 
-        {/* Thông báo */}
         {successMessage && <div className="success-message">{successMessage}</div>}
         {errorMessage && <div className="error-message">{errorMessage}</div>}
       </div>
 
-      {/* Bộ lọc */}
       <div className="filter-container">
         <label>ID Máy In:</label>
         <input
@@ -107,20 +149,28 @@ const ListPrinter = () => {
       <table className="printer-table">
         <thead>
           <tr>
-            <th>ID Máy In</th>
-            <th>Số Tờ Còn Lại</th>
+            <th>Tên Máy In</th>
+            <th>Loại</th>
+            <th>Kiểu</th>
+            <th>Nhà Sản Xuất</th>
+            <th>Số Giấy Còn Lại</th>
             <th>Trạng Thái</th>
             <th>Hành Động</th>
           </tr>
         </thead>
         <tbody>
           {filteredPrinters.map((printer) => (
-            <tr key={printer.id}>
-              <td>{printer.id}</td>
-              <td>{printer.remainingPages}</td>
+            <tr key={printer._id}>
+              <td>{printer.name}</td>
+              <td>{printer.type}</td>
+              <td>{printer.model}</td>
+              <td>{printer.manufacturer}</td>
+              <td>{printer.paper_count}</td>
               <td>{printer.status}</td>
               <td>
-                <button onClick={() => handleEnableDisable(printer.id)}>
+                <button
+                  onClick={() => handleEnableDisable(printer._id, printer.status)}
+                >
                   {printer.status === "Enabled" ? "Disable" : "Enable"}
                 </button>
               </td>
@@ -129,13 +179,12 @@ const ListPrinter = () => {
         </tbody>
       </table>
 
-      {/* Modal Add Printer */}
       {showAddPrinterModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Thêm Máy In Mới</h2>
             <div className="form-group">
-              <label>ID Máy In:</label>
+              <label>Tên Máy In:</label>
               <input
                 type="text"
                 value={newPrinter.id}
