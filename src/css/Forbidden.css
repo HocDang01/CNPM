@@ -1,0 +1,43 @@
+/* Forbidden.css */
+.forbidden-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: linear-gradient(45deg, var(--thirdColor), var(--themeColor));
+    color: #721c24;
+    text-align: center;
+  }
+  
+  .forbidden-container .forbidden-content {
+    padding: 30px;
+    border-radius: 10px;
+    background-color: transparent;
+    /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .forbidden-container  h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .forbidden-container p {
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+  
+  .forbidden-container .go-home-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .forbidden-container .go-home-btn:hover {
+    background-color: #0056b3;
+  }
+  

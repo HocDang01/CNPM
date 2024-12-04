@@ -3,6 +3,13 @@ import "../css/SideBarSPSO.css";
 import hcmut from "../images/HCMUT_official_logo.png";
 
 const SideBarAdmin = ({ activeTab, onTabChange }) => {
+  const handleLogout = () => {
+    // Xóa thông tin trong localStorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('role');
+    window.location.href = '/login'; // Chuyển hướng về trang đăng nhập
+  };
+  
   return (
     <div id="sidebarSPSO">
       <div className="sidebar-logo">
@@ -20,6 +27,13 @@ const SideBarAdmin = ({ activeTab, onTabChange }) => {
             </a>
           )
         )}
+        {/* Thêm mục Đăng xuất */}
+        <a
+          className="sidebar-item logout"
+          onClick={handleLogout}
+        >
+          Đăng xuất
+        </a>
       </nav>
     </div>
   );
