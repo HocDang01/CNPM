@@ -1,62 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/HistoryAllPrint.css"; // Tạo một file CSS mới cho trang này
 
 const HistoryAllPrint = () => {
   const reportsPerPage = 10; // Số báo cáo mỗi trang
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState(""); // Tìm kiếm theo tên/email
+  const [printerSearch, setPrinterSearch] = useState(""); // Tìm kiếm theo tên máy in
+  const [locationSearch, setLocationSearch] = useState(""); // Tìm kiếm theo vị trí
   const [dateFilter, setDateFilter] = useState("all"); // Bộ lọc thời gian
   const [sortOrder, setSortOrder] = useState("asc"); // Sắp xếp theo ngày in (ascending/descending)
+  const [reports, setReports] = useState([]); // Dữ liệu báo cáo từ API
+  const [loading, setLoading] = useState(true); // Trạng thái loading
 
-  // Dữ liệu hardcoded
-  const data = [
-    {
-      email: "user1@example.com",
-      fullName: "Nguyễn Văn A",
-      printedFile: "File báo cáo.pdf",
-      printerId: "PR-001",
-      printDate: "2024-11-25 09:00",
-    },
-    {
-      email: "user2@example.com",
-      fullName: "Trần Thị B",
-      printedFile: "Hướng dẫn sử dụng.docx",
-      printerId: "PR-002",
-      printDate: "2024-11-24 15:30",
-    },
-    {
-      email: "user3@example.com",
-      fullName: "Lê Văn C",
-      printedFile: "Tài liệu kế toán.xlsx",
-      printerId: "PR-003",
-      printDate: "2024-11-23 14:20",
-    },
-    {
-      email: "user4@example.com",
-      fullName: "Phạm Văn D",
-      printedFile: "Đề tài nghiên cứu.pdf",
-      printerId: "PR-004",
-      printDate: "2024-11-22 11:10",
-    },
-    {
-      email: "user5@example.com",
-      fullName: "Nguyễn Thị E",
-      printedFile: "Hợp đồng ký kết.pdf",
-      printerId: "PR-005",
-      printDate: "2024-11-20 16:45",
-    },
-    // Thêm dữ liệu mẫu nữa để đủ phân trang
-  ];
+  // Hàm gọi API và lấy dữ liệu
+  const fetchReports = async () => {
+    const token = localStorage.getItem("access_token");
+    const userRole = localStorage.getItem("role");
 
-  // Hàm để lọc dữ liệu theo tên/email và khoảng thời gian
+    try {
+      const response = await fetch("/spso/printer/export_printing_report", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          role: userRole,
+        },
+      });
+      const data = await response.json();
+      if (data.status === "success") {
+        setReports(data.report);
+      } else {
+        console.error("Error fetching data", data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // Kết thúc trạng thái loading
+    }
+  };
+
+  useEffect(() => {
+    fetchReports(); // Gọi API khi component mount
+  }, []);
+
+  // Hàm để lọc dữ liệu theo tên/email, máy in, vị trí và khoảng thời gian
   const filterData = () => {
-    let filteredData = data;
+    let filteredData = reports;
 
     // Lọc theo tên/email
     if (searchQuery) {
       filteredData = filteredData.filter((item) =>
         item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Lọc theo tên máy in
+    if (printerSearch) {
+      filteredData = filteredData.filter((item) =>
+        item["printer name"].toLowerCase().includes(printerSearch.toLowerCase())
+      );
+    }
+
+    // Lọc theo vị trí máy in
+    if (locationSearch) {
+      filteredData = filteredData.filter((item) =>
+        item["printer location"].toLowerCase().includes(locationSearch.toLowerCase())
       );
     }
 
@@ -64,14 +73,14 @@ const HistoryAllPrint = () => {
     if (dateFilter !== "all") {
       const now = new Date();
       const pastDate = new Date(now.setDate(now.getDate() - dateFilter));
-      filteredData = filteredData.filter((item) => new Date(item.printDate) > pastDate);
+      filteredData = filteredData.filter((item) => new Date(item.date) > pastDate);
     }
 
     // Sắp xếp theo ngày in
     if (sortOrder === "asc") {
-      filteredData.sort((a, b) => new Date(a.printDate) - new Date(b.printDate));
+      filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
     } else {
-      filteredData.sort((a, b) => new Date(b.printDate) - new Date(a.printDate));
+      filteredData.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
     return filteredData;
@@ -88,6 +97,10 @@ const HistoryAllPrint = () => {
     setCurrentPage(page);
   };
 
+  if (loading) {
+    return <div>Loading...</div>; // Hiển thị loading khi dữ liệu đang được tải
+  }
+
   return (
     <div className="history-all-print">
       <div className="filters">
@@ -97,7 +110,19 @@ const HistoryAllPrint = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        
+        <input
+          type="text"
+          placeholder="Tìm theo máy in"
+          value={printerSearch}
+          onChange={(e) => setPrinterSearch(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Tìm theo vị trí"
+          value={locationSearch}
+          onChange={(e) => setLocationSearch(e.target.value)}
+        />
+
         <select onChange={(e) => setDateFilter(e.target.value)} value={dateFilter}>
           <option value="all">Tất cả</option>
           <option value="1">1 ngày</option>
@@ -118,7 +143,9 @@ const HistoryAllPrint = () => {
             <th>Email</th>
             <th>Họ Tên</th>
             <th>File Đã In</th>
-            <th>ID Máy In</th>
+            <th>Số Trang</th>
+            <th>Máy In</th>
+            <th>Vị Trí</th>
             <th>Ngày In</th>
           </tr>
         </thead>
@@ -126,10 +153,12 @@ const HistoryAllPrint = () => {
           {currentReports.map((item, index) => (
             <tr key={index}>
               <td>{item.email}</td>
-              <td>{item.fullName}</td>
-              <td>{item.printedFile}</td>
-              <td>{item.printerId}</td>
-              <td>{item.printDate}</td>
+              <td>{item.name}</td>
+              <td>{item.file_name}</td>
+              <td>{item.pages}</td>
+              <td>{item["printer name"]}</td>
+              <td>{item["printer location"]}</td>
+              <td>{item.date}</td>
             </tr>
           ))}
         </tbody>

@@ -1,51 +1,191 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/ViewReport.css";
 
 const ViewReport = () => {
   const reportsPerPage = 14; // Số báo cáo mỗi trang
   const [currentPage, setCurrentPage] = useState(1);
+  const [reports, setReports] = useState([]);
+  const [filteredReports, setFilteredReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [filterTime, setFilterTime] = useState("all");
 
-  // Danh sách báo cáo mẫu
-  const reports = [
-    {id: "1", email: "user1@example.com", name: "Nguyễn Văn A", issue: "Lỗi in ấn", details: "Máy in không hoạt động.", time: "2024-11-25 10:00" },
-    {id: "2", email: "user2@example.com", name: "Trần Thị B", issue: "Kết nối mạng", details: "Không thể kết nối tới máy in qua mạng.", time: "2024-11-25 11:00" },
-    {id: "3", email: "user3@example.com", name: "Lê Văn C", issue: "Lỗi phần mềm", details: "Phần mềm không nhận máy in.", time: "2024-11-25 12:00" },
-    {id: "4", email: "user4@example.com", name: "Phạm Văn D", issue: "Hết mực in", details: "Máy in báo hết mực dù vừa thay.", time: "2024-11-25 13:00" },
-    {id: "5", email: "user5@example.com", name: "Nguyễn Thị E", issue: "Lỗi cài đặt", details: "Không cài đặt được trình điều khiển máy in.", time: "2024-11-25 14:00" },
-    {id: "6", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "7", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "8", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "9", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "10", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "11", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "12", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "13", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "14", email: "user6@example.com", name: "Vũ Văn F", issue: "Lỗi phần cứng", details: "Máy in không nhận giấy.", time: "2024-11-25 15:00" },
-    {id: "15", email: "user5@example.com", name: "Nguyễn Thị E", issue: "Lỗi cài đặt", details: "Không cài đặt được trình điều khiển máy in.", time: "2024-11-25 14:00" },
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
 
-  ];
+        const response = await fetch("/spso/printer/issues", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            Role: role,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch reports");
+        }
+
+        const data = await response.json();
+        if (data.status === "success") {
+          setReports(data.data);
+          setFilteredReports(data.data); // Lưu báo cáo vào filteredReports
+        } else {
+          throw new Error("Unexpected response format");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+  // Hàm tìm kiếm
+  const handleSearch = () => {
+    const filtered = reports.filter((report) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        report["student email"].toLowerCase().includes(searchLower) ||
+        report["student name"].toLowerCase().includes(searchLower) ||
+        report["printer name"].toLowerCase().includes(searchLower)
+      );
+    });
+    setFilteredReports(filtered);
+  };
+
+  // Hàm sắp xếp theo thời gian
+  const handleSort = (order) => {
+    setSortOrder(order);
+    const sortedReports = [...filteredReports].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return order === "desc" ? dateB - dateA : dateA - dateB;
+    });
+    setFilteredReports(sortedReports);
+  };
+
+  // Hàm lọc theo thời gian
+const handleTimeFilter = (timePeriod) => {
+  setFilterTime(timePeriod);
+  const now = new Date();
+  let filteredByTime = [...reports];
+
+  if (timePeriod === "1day") {
+    filteredByTime = filteredByTime.filter((report) => {
+      const reportDate = new Date(report.date);
+      return now - reportDate <= 24 * 60 * 60 * 1000;
+    });
+  } else if (timePeriod === "1week") {
+    filteredByTime = filteredByTime.filter((report) => {
+      const reportDate = new Date(report.date);
+      return now - reportDate <= 7 * 24 * 60 * 60 * 1000;
+    });
+  } else if (timePeriod === "1month") {
+    filteredByTime = filteredByTime.filter((report) => {
+      const reportDate = new Date(report.date);
+      return now - reportDate <= 30 * 24 * 60 * 60 * 1000;
+    });
+  } else if (timePeriod === "1year") {
+    filteredByTime = filteredByTime.filter((report) => {
+      const reportDate = new Date(report.date);
+      return now - reportDate <= 365 * 24 * 60 * 60 * 1000;
+    });
+  }
+
+  setFilteredReports(filteredByTime);
+};
 
   // Lấy báo cáo hiển thị trên trang hiện tại
   const startIndex = (currentPage - 1) * reportsPerPage;
-  const currentReports = reports.slice(startIndex, startIndex + reportsPerPage);
+  const currentReports = filteredReports.slice(startIndex, startIndex + reportsPerPage);
 
   // Tính tổng số trang
-  const totalPages = Math.ceil(reports.length / reportsPerPage);
+  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
+  if (loading) {
+    return <div>Đang tải dữ liệu...</div>;
+  }
+
+  if (error) {
+    return <div>Lỗi: {error}</div>;
+  }
+
   return (
     <div className="view-report-container">
+      {/* Tìm kiếm */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Tìm kiếm theo email, tên học sinh, tên máy in"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>Tìm kiếm</button>
+      </div>
+
+      {/* Lọc theo thời gian */}
+      <div className="time-filter">
+        <button
+          className={filterTime === "1day" ? "active" : ""}
+          onClick={() => handleTimeFilter("1day")}
+        >
+          1 Ngày
+        </button>
+        <button
+          className={filterTime === "1week" ? "active" : ""}
+          onClick={() => handleTimeFilter("1week")}
+        >
+          1 Tuần
+        </button>
+        <button
+          className={filterTime === "1month" ? "active" : ""}
+          onClick={() => handleTimeFilter("1month")}
+        >
+          1 Tháng
+        </button>
+        <button
+          className={filterTime === "1year" ? "active" : ""}
+          onClick={() => handleTimeFilter("1year")}
+        >
+          1 Năm
+        </button>
+        <button
+          className={filterTime === "all" ? "active" : ""}
+          onClick={() => handleTimeFilter("all")}
+        >
+          Tất Cả
+        </button>
+      </div>
+
+      {/* Sắp xếp theo thời gian */}
+      <div className="sort-time">
+        <select onChange={(e) => handleSort(e.target.value)} value={sortOrder}>
+          <option value="desc">Mới nhất</option>
+          <option value="asc">Cũ nhất</option>
+        </select>
+      </div>
+
+      {/* Bảng báo cáo */}
       <table className="report-table">
         <thead>
           <tr>
-            <th>STT</th>
             <th>Email</th>
             <th>Họ Tên</th>
             <th>Vấn Đề</th>
-            <th>Chi Tiết</th>
+            <th>Tên Máy In</th>
+            <th>Vị Trí</th>
             <th>Thời Gian Gửi</th>
             <th>Hành Động</th>
           </tr>
@@ -53,12 +193,12 @@ const ViewReport = () => {
         <tbody>
           {currentReports.map((report, index) => (
             <tr key={index}>
-                <td>{report.id}</td>
-                <td>{report.email}</td>
-                <td>{report.name}</td>
-                <td>{report.issue}</td>
-                <td>{report.details}</td>
-                <td>{report.time}</td>
+              <td>{report["student email"]}</td>
+              <td>{report["student name"]}</td>
+              <td>{report.issue}</td>
+              <td>{report["printer name"]}</td>
+              <td>{report["printer location"]}</td>
+              <td>{report.date}</td>
               <td>
                 <button className="detail-button">Xem Chi Tiết</button>
               </td>

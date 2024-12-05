@@ -47,7 +47,21 @@
   font-size: 14px;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
+/* Nút Thay đổi */
+.disable-btn {
+  padding: 8px 16px;
+  background-color: #3336d0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.disable-btn:hover {
+  background-color: #3336d0;
+  transform: scale(1.05);
+}
 .edit-btn:hover {
   background-color: #218838;
   transform: scale(1.05);

@@ -10,6 +10,70 @@
     background-color: #f9f9f9;
   }
   
+.search-container {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.search-container input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-container button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.search-container button:hover {
+  background-color: #0056b3;
+}
+
+.time-filter, .sort-time {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.time-filter button,
+.sort-time select {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #fff;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.time-filter button:hover,
+.sort-time select:hover {
+  background-color: #f0f0f0;
+}
+
+.time-filter button:active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
   .report-table {
     width: 100%;
     max-width: none;
