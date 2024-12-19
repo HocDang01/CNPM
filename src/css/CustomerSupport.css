@@ -1,0 +1,34 @@
+.customer-support-container {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customer-support-container h1 {
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #343a40;
+}
+
+.customer-support-container .form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.customer-support-container .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.customer-support-container .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.customer-support-container .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}

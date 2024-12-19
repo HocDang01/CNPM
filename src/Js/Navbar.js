@@ -16,8 +16,7 @@ const Navbar = () => {
         <div className="navbar-user">
           <FaUserCircle size={32} />
           <div className="navbar-user-info">
-            <span className="navbar-user-name">Moni Roy</span>
-            <span className="navbar-user-balance">Số dư: 50 trang</span>
+            <span className="navbar-user-name">Học Đăng</span>
           </div>
         </div>
       </div>

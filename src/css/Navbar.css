@@ -3,7 +3,7 @@
     align-items: center;
     padding: 10px 20px;
     border-bottom: 1px solid #e0e0e0;
-    background-color: #fff;
+    background-color: #ffffff;
   }
   
   .navbar-logo {
@@ -43,6 +43,7 @@
   .navbar-user {
     display: flex;
     align-items: center;
+    margin-right: 40px;
   }
   
   .navbar-user-info {

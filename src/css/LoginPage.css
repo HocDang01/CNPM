@@ -17,7 +17,7 @@
   }
   
   /* Tiêu đề đăng nhập */
-  h2 {
+  .login-container h2 {
     color: #333;
     font-size: 24px;
     margin-bottom: 20px;

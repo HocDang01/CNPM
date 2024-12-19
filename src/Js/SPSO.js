@@ -6,6 +6,7 @@ import ViewReport from "./ViewReport";
 import HistoryAllPrint from "./HistoryAllPrint";
 import ListPrinter from "./ListPrinter";
 import Configure from "./Configure";
+import Home from "./Home";
 
 const SPSO = () => {
   const [activeTab, setActiveTab] = useState("Trang chủ"); // Theo dõi tab nào được chọn
@@ -13,7 +14,7 @@ const SPSO = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "Trang chủ":
-        return <h2>Đây là Trang chủ</h2>;
+        return <Home/>;
       case "Xem báo cáo":
         return <ViewReport/>;
       case "Xem lịch sử in":

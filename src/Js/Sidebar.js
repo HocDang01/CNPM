@@ -1,22 +1,42 @@
 import React from "react";
 import "../css/Sidebar.css";
-import hcmut from '../images/HCMUT_official_logo.png'
+import hcmut from "../images/HCMUT_official_logo.png";
 
-const Sidebar = () => {
+const SideBar = ({ activeTab, onTabChange }) => {
+  const handleLogout = () => {
+    // Xóa thông tin trong localStorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('role');
+    window.location.href = '/login'; // Chuyển hướng về trang đăng nhập
+  };
   return (
-    <div className="sidebar">
+    <div id="sidebarSPSO">
       <div className="sidebar-logo">
-        <img className="sidebar-logo-circle" src={hcmut}></img>
+        <img className="sidebar-logo-circle" src={hcmut} alt="HCMUT Logo" />
       </div>
       <nav className="sidebar-menu">
-        <a href="#" className="sidebar-item">Trang chủ</a>
-        <a href="#" className="sidebar-item">In tài liệu</a>
-        <a href="#" className="sidebar-item">Lịch sử in</a>
-        <a href="#" className="sidebar-item">Mua thêm trang in</a>
-        <a href="#" className="sidebar-item">Hỗ trợ</a>
+        {["In tài liệu", "Lịch sử in", "Mua thêm trang in", "Hỗ trợ"].map(
+          (item) => (
+            <a
+              key={item}
+              className={`sidebar-item ${activeTab === item ? "active" : ""}`}
+              onClick={() => onTabChange(item)} // Gọi hàm khi tab được chọn
+            >
+              {item}
+            </a>
+          )
+        )}
+        
+        {/* Thêm mục Đăng xuất */}
+        <a
+          className="sidebar-item logout"
+          onClick={handleLogout}
+        >
+          Đăng xuất
+        </a>
       </nav>
     </div>
   );
 };
 
-export default Sidebar;
+export default SideBar;

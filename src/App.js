@@ -57,6 +57,14 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/studentpage"
+          element={
+            <PrivateRoute role="student">
+              <Manage />
+            </PrivateRoute>
+          }
+        />
 
         {/* Các route công khai khác */}
         <Route path="/403" element={<Forbidden />} />

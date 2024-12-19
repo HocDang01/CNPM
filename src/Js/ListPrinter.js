@@ -457,13 +457,13 @@ const ListPrinter = () => {
                 />
               </div>
               <div className="modal-actions">
-                <button type="submit">Lưu</button>
                 <button
                   type="button"
                   onClick={() => setShowEditPrinterModal(false)}
                 >
                   Hủy
                 </button>
+                <button type="submit">Lưu</button>
               </div>
             </form>
           </div>
