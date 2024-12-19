@@ -1,0 +1,60 @@
+.sidebar-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  #sidebarSPSO {
+    width: 240px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+  }
+  
+  .sidebar-logo {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .sidebar-logo-circle {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 20px;
+  }
+  
+  .sidebar-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .sidebar-item:hover {
+    background-color: #007bff;  /* Màu nền khi hover */
+    color: #fff;  /* Màu chữ khi hover */
+  }
+  
+  .sidebar-item.active {
+    background-color: #0056b3; /* Màu nền khi item đang được chọn */
+    color: #fff;  /* Màu chữ khi item đang được chọn */
+  }
+  
+  .sidebar-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

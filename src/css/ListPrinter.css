@@ -1,0 +1,130 @@
+/* Modal styles */
+.list-printer {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+  }
+  
+  .list-printer-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .add-printer-btn {
+    padding: 10px 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-printer-btn:hover {
+    background-color: darkblue;
+  }
+  
+  .filter-container {
+    display: flex;
+    justify-content: center; /* Căn giữa bộ lọc */
+    align-items: center;
+    width: 60%;
+  }
+  
+  .filter-container select,
+  .filter-container input {
+    margin-left: 10px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .filter-container label {
+    margin-right: 5px;
+  }
+  
+ /* Thông báo không làm xê dịch bảng */
+.success-message,
+.error-message {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  color: white;
+  display: inline-block;
+  position: absolute; /* Sử dụng absolute để không làm xê dịch layout */
+  top: 50px; /* Khoảng cách từ trên cùng */
+  right: 20px; /* Khoảng cách từ bên phải */
+  z-index: 1000; /* Đảm bảo thông báo xuất hiện trên các phần tử khác */
+}
+
+.success-message {
+  background-color: green;
+}
+
+.error-message {
+  background-color: red;
+}
+
+  
+  .printer-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .printer-table th,
+  .printer-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 800px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    margin-top: 5px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  

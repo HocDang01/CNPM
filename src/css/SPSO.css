@@ -1,0 +1,19 @@
+.SPSO-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  .SPSO-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .SPSO-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px); /* Trừ chiều cao của Navbar */
+  }
+  
